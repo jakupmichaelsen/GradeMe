@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "HFtodo Dashboard",
+  "version": "1.0.0",
+  "description": "Standalone HFtodo dashboard for the Moodle Grade-Me block.",
+  "permissions": [
+    "storage",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://mithf.dk/*"
+  ],
+  "action": {
+    "default_title": "HFtodo",
+    "default_icon": {
+      "16": "icons/hftodo-16.png",
+      "32": "icons/hftodo-32.png",
+      "48": "icons/hftodo-48.png",
+      "128": "icons/hftodo-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/hftodo-16.png",
+    "32": "icons/hftodo-32.png",
+    "48": "icons/hftodo-48.png",
+    "128": "icons/hftodo-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

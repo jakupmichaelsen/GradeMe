@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="HFtodo icon">
+  <rect width="128" height="128" fill="#282828"/>
+  <rect x="14" y="14" width="100" height="100" rx="18" fill="#3c3836" stroke="#504945" stroke-width="4"/>
+  <path fill="none" stroke="#b8bb26" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" d="M34 66l20 20 42-46"/>
+  <path fill="none" stroke="#fabd2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" d="M34 66l20 20 42-46"/>
+</svg>

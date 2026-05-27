@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HFtodo</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <main class="page">
+    <section class="modal" aria-labelledby="title">
+      <header class="modal-header">
+        <h1 id="title">HFtodo</h1>
+        <div class="summary" id="summary"></div>
+      </header>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input class="search" id="search" type="search" placeholder="Søg i opgaver eller elever" autocomplete="off">
+          <button class="save-search" id="saveSearch" type="button" aria-label="Gem søgning" title="Gem søgning">☆</button>
+        </div>
+        <button class="primary icon-button" id="refresh" type="button" aria-label="Opdater" title="Opdater">↻</button>
+        <button class="icon-button" id="openSelected" type="button" aria-label="Åbn markerede" title="Åbn markerede">↗</button>
+        <button class="icon-button" id="downloadSelected" type="button" aria-label="Download markerede" title="Download markerede">↓</button>
+        <button class="icon-button" id="clearSelection" type="button" aria-label="Ryd markeringer" title="Ryd markeringer">×</button>
+        <button class="icon-button" id="toggleAll" type="button" aria-label="Udvid / Klap sammen" title="Udvid / Klap sammen">⊞</button>
+        <button class="theme-switch icon-button" id="darkMode" type="button" aria-pressed="false" aria-label="Mørk tilstand" title="Mørk tilstand">☾</button>
+      </div>
+
+      <div class="saved-searches" id="savedSearches" aria-label="Gemte søgninger"></div>
+
+      <div class="status-row" id="status" role="status"></div>
+
+      <div class="content">
+        <div class="course">
+          <button class="view-icon" id="viewMode" type="button" aria-pressed="false" aria-label="Skift til datovisning" title="Skift til datovisning">☷</button>
+          <a href="https://mithf.dk/course/view.php?id=189" target="_blank" rel="noreferrer">HF | Engelsk</a>
+        </div>
+        <div id="modules"></div>
+        <div class="empty" id="empty">Ingen opgaver matcher søgningen.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
