@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "HFtodo Dashboard",
+  "name": "GradeMe Dashboard",
   "version": "1.0.0",
-  "description": "Standalone HFtodo dashboard for the Moodle Grade-Me block.",
+  "description": "Standalone dashboard for the Moodle Grade-Me block.",
   "permissions": [
     "storage",
     "scripting",
@@ -12,7 +12,7 @@
     "https://mithf.dk/*"
   ],
   "action": {
-    "default_title": "HFtodo",
+    "default_title": "GradeMe Dashboard",
     "default_icon": {
       "16": "icons/hftodo-16.png",
       "32": "icons/hftodo-32.png",

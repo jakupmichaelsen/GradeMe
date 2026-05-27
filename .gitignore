@@ -1,0 +1,6 @@
+.codex
+.agents
+requirements.md
+.DS_Store
+*.log
+*.tmp

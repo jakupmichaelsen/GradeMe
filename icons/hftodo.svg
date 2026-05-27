@@ -1,6 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="HFtodo icon">
-  <rect width="128" height="128" fill="#282828"/>
-  <rect x="14" y="14" width="100" height="100" rx="18" fill="#3c3836" stroke="#504945" stroke-width="4"/>
-  <path fill="none" stroke="#b8bb26" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" d="M34 66l20 20 42-46"/>
-  <path fill="none" stroke="#fabd2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" d="M34 66l20 20 42-46"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="GradeMe Dashboard icon">
+  <defs>
+    <linearGradient id="orange" x1="18" y1="10" x2="108" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb33f"/>
+      <stop offset="1" stop-color="#f27616"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#7a2e00" flood-opacity=".28"/>
+    </filter>
+  </defs>
+
+  <rect width="128" height="128" rx="24" fill="url(#orange)"/>
+  <path fill="#7a3400" opacity=".18" d="M0 91c25 14 53 20 84 18 18-1 33-6 44-14v33H0z"/>
+
+  <g filter="url(#shadow)">
+    <rect x="26" y="30" width="76" height="78" rx="12" fill="#fffdf7"/>
+    <rect x="39" y="44" width="18" height="18" rx="4" fill="#f3eee2"/>
+    <rect x="39" y="70" width="18" height="18" rx="4" fill="#f3eee2"/>
+    <path fill="none" stroke="#2f8f5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="m43 53 5 5 10-13M43 79l5 5 10-13"/>
+    <path fill="none" stroke="#51453a" stroke-linecap="round" stroke-width="6" d="M66 52h22M66 78h19"/>
+    <path fill="#2f2722" d="m65 21 39 13-39 13-39-13z"/>
+    <path fill="#3c332c" d="M45 39c10 10 30 10 40 0v15c-10 8-30 8-40 0z"/>
+    <path fill="none" stroke="#2f2722" stroke-linecap="round" stroke-width="5" d="M104 35v22"/>
+    <circle cx="104" cy="62" r="5" fill="#2f2722"/>
+  </g>
 </svg>
