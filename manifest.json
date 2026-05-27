@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Standalone dashboard for the Moodle Grade-Me block.",
   "permissions": [
+    "downloads",
     "storage",
     "scripting",
     "tabs"

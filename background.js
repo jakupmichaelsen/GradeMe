@@ -54,30 +54,138 @@ async function downloadSubmission(url, studentName) {
     return { ok: false, error: "Ugyldigt Moodle-link." };
   }
 
-  const downloadUrl = new URL(url);
-  if (studentName) {
-    downloadUrl.searchParams.set("hf_student_name", studentName);
+  const response = await fetch(url, { credentials: "include" });
+  if (!response.ok) {
+    return { ok: false, error: `Moodle-siden kunne ikke hentes (${response.status}).` };
   }
 
-  const tab = await extensionApi.tabs.create({ url: downloadUrl.href, active: false });
-  try {
-    await waitForComplete(tab.id);
+  const html = await response.text();
+  const urls = extractSubmissionUrls(html, url);
 
-    const [result] = await extensionApi.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["download-submission.js"]
+  if (!urls.length) {
+    return { ok: false, count: 0, error: "Ingen fil- eller lydaflevering fundet." };
+  }
+
+  const safeName = firstName(studentName || findStudentName(html) || "student");
+  for (const [index, fileUrl] of urls.entries()) {
+    await extensionApi.downloads.download({
+      url: fileUrl,
+      filename: downloadFilename(fileUrl, safeName, urls.length > 1 ? index + 1 : 0),
+      conflictAction: "uniquify",
+      saveAs: false
     });
-
-    if (!result?.result) {
-      return { ok: false, error: "Download-scriptet svarede ikke." };
-    }
-
-    return result.result;
-  } finally {
-    setTimeout(() => {
-      extensionApi.tabs.remove(tab.id).catch(() => {});
-    }, 15000);
   }
+
+  return { ok: true, count: urls.length };
+}
+
+function extractSubmissionUrls(html, pageUrl) {
+  const urls = [];
+
+  for (const tag of tagsByName(html, "a").filter(tag => attributeValue(tag, "href").includes("pluginfile.php"))) {
+    urls.push(attributeValue(tag, "href"));
+  }
+
+  for (const tag of matchingTags(html, "audio", ["assignsubmission_onlinepoodll_audio"])) {
+    urls.push(attributeValue(tag, "src"));
+  }
+
+  return [...new Set(urls.map(url => absoluteUrl(url, pageUrl)).filter(Boolean))];
+}
+
+function tagsByName(html, tagName) {
+  return html.match(new RegExp(`<${tagName}\\b[^>]*>`, "gi")) || [];
+}
+
+function matchingTags(html, tagName, requiredClasses, requiredText = "") {
+  const tags = tagsByName(html, tagName);
+  return tags.filter(tag => {
+    const className = attributeValue(tag, "class");
+    const classes = className.split(/\s+/).filter(Boolean);
+    return requiredClasses.some(required => classes.includes(required)) && (!requiredText || tag.includes(requiredText));
+  });
+}
+
+function attributeValue(tag, name) {
+  const pattern = new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");
+  const match = tag.match(pattern);
+  return decodeHtmlAttribute(match?.[1] || match?.[2] || match?.[3] || "");
+}
+
+function decodeHtmlAttribute(value) {
+  return String(value)
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function absoluteUrl(url, baseUrl) {
+  if (!url) return "";
+  try {
+    const absolute = new URL(url, baseUrl);
+    return absolute.protocol === "https:" && absolute.hostname === "mithf.dk" ? absolute.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function downloadFilename(url, studentName, index) {
+  const suffix = index ? `-${index}` : "";
+  const ext = extensionFromUrl(url) || "file";
+  return `${studentName}${suffix}.${ext}`;
+}
+
+function extensionFromUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const pathname = decodeURIComponent(parsed.pathname);
+    const filename = pathname.split("/").filter(Boolean).pop() || "";
+    const match = filename.match(/\.([A-Za-z0-9]{1,8})$/);
+    return match ? match[1].toLowerCase() : "";
+  } catch {
+    return "";
+  }
+}
+
+function findStudentName(html) {
+  const titleMatch = html.match(/<title\b[^>]*>([^<]+)/i);
+  if (titleMatch) return decodeHtmlAttribute(titleMatch[1]).trim();
+
+  const selectors = [
+    ".fullname",
+    ".userfullnames",
+    ".logininfo",
+    ".page-header-headings h1",
+    ".page-header-headings",
+    "h1",
+    "h2",
+    "h3"
+  ];
+
+  for (const selector of selectors.filter(selector => selector.startsWith("."))) {
+    const className = selector.slice(1);
+    const tag = (html.match(new RegExp(`<[^>]+class=["'][^"']*\\b${className}\\b[^"']*["'][^>]*>[\\s\\S]*?<\\/[^>]+>`, "i")) || [])[0];
+    const text = stripTags(tag || "").trim();
+    if (text) return text;
+  }
+
+  return "";
+}
+
+function stripTags(html) {
+  return decodeHtmlAttribute(String(html).replace(/<[^>]*>/g, " ").replace(/\s+/g, " "));
+}
+
+function firstName(fullName) {
+  const parts = String(fullName || "")
+    .trim()
+    .split(/\s+/)
+    .map(part => part.replace(/[^A-Za-zÆØÅæøåÀ-ÖØ-öø-ÿ0-9._-]/g, ""));
+
+  const candidate = parts.find(part => part && !/^[A-ZÆØÅ]{1,4}$/.test(part)) || parts[0] || "";
+  return candidate || "student";
 }
 
 function waitForComplete(tabId) {
